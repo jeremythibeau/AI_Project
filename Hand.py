@@ -11,6 +11,7 @@ class Hand:
 
     #calculates the score of the hand
     def countScore(self):
+        self.score = 0
         for i in range(len(self.cards)):
             if self.cards[i].number == 13 or self.cards[i].number == 12 or self.cards[i].number == 11:
                 self.score += 10
@@ -27,6 +28,13 @@ class Hand:
 
         return self.score
 
+
+    #calculates blackjack
+    def blackJackCheck(self):
+        if self.score == 21:
+            return True
+        return False
+
     #checks if the hand is busted by being over 21
     def checkBusted(self):
         if (self.countScore() > 21):
@@ -37,3 +45,13 @@ class Hand:
    #adds a card to the hand
     def addCard(self, card):
         self.cards.append(card)
+
+    #prints hand contents
+    def printHand(self):
+        for x in range(len(self.cards)):
+            print(self.cards[x].printCard())
+
+    def printCompHand(self):
+        #computer only shows one card, not both
+        for y in range(1, len(self.cards)):
+            print(self.cards[y].printCard())

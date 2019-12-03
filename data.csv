@@ -1,0 +1,8 @@
+id,name,player_score,comp_score,computerHasAce,decision
+1,johnny,21,19,True,False
+2,mary,20,21,False,False
+3,mary,20,21,False,False
+4,mary,20,21,False,False
+5,mary,20,21,False,False
+6,mary,20,21,False,False
+7,mary,20,21,False,False

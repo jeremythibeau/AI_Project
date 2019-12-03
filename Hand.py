@@ -50,12 +50,14 @@ class Hand:
     def printHand(self):
         s = ""
         for x in range(len(self.cards)):
-            s += self.cards[x].printCard()+ " "
+            s += self.cards[x].printCard() + ", "
+        s = s[:-2]
         return s
 
     def printCompHand(self):
         #computer only shows one card, not both
         s = ""
         for y in range(1, len(self.cards)):
-            s += self.cards[y].printCard() + " "
+            s += self.cards[y].printCard() + ", "
+        s = s[:-2]
         return s

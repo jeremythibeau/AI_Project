@@ -110,7 +110,12 @@ class Game:
         choice = 0
 
         while choice != 1 and choice != 2:
-            choice = int(input("Please enter to 1 hit or 2 stay, then press enter."))
+            try:
+                choice = int(input("Please enter to 1 hit or 2 stay, then press enter."))
+            except:
+                choice = 0
+                continue
+
         return choice
 
 

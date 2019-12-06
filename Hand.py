@@ -31,7 +31,7 @@ class Hand:
 
     #calculates blackjack
     def blackJackCheck(self):
-        if self.score == 21:
+        if self.countScore() == 21:
             return True
         return False
 
@@ -48,10 +48,16 @@ class Hand:
 
     #prints hand contents
     def printHand(self):
+        s = ""
         for x in range(len(self.cards)):
-            print(self.cards[x].printCard())
+            s += self.cards[x].printCard() + ", "
+        s = s[:-2]
+        return s
 
     def printCompHand(self):
         #computer only shows one card, not both
+        s = ""
         for y in range(1, len(self.cards)):
-            print(self.cards[y].printCard())
+            s += self.cards[y].printCard() + ", "
+        s = s[:-2]
+        return s

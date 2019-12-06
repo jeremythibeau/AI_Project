@@ -10,6 +10,7 @@ class Game:
     playerWin = False
     winner = False
     draw = False
+    compMsg = ""
 
     def __init__(self):
         self.Deck = Deck.Deck()
@@ -53,7 +54,7 @@ class Game:
             #computer decision
             compChoice = self.computerAction()
             if compChoice == 1:
-                print("Computer hit!")
+                self.compMsg = "Computer hit."
                 self.playerHand.addCard(self.Deck.drawCard())
                 #check if computer loses
                 if self.playerHand.checkBusted():
@@ -61,7 +62,7 @@ class Game:
                     self.playerWin = True
                     break
             else:
-                print("Computer stayed.")
+                self.compMsg = "Computer stayed."
 
             #if both computer and player stayed game ends
             if compChoice == 2 and playerchoice == 2:
@@ -85,7 +86,9 @@ class Game:
     def determineWinner(self):
         clearScreen()
         print("Player Score: ", self.playerHand.countScore())
+        print("Player Hand: ", self.playerHand.printHand())
         print("Computer Score: ", self.compHand.countScore())
+        print("Computer Hand: ", self.compHand.printHand())
         if self.playerWin is True:
             return "Congratulations you won!"
         elif self.playerWin is False and self.draw is True:
@@ -94,19 +97,25 @@ class Game:
 
     def turnScreen(self):
         clearScreen()
+        print(self.compMsg)
         print("################")
         print("Player Hand:")
-        self.playerHand.printHand()
+        print(self.playerHand.printHand())
         print("Player Score: ", self.playerHand.countScore())
         print("################")
         print("Computer Cards Showing:")
-        self.compHand.printCompHand()
+        print(self.compHand.printCompHand())
         print("Cards in deck: ", self.Deck.numCards)
         print("################")
         choice = 0
 
         while choice != 1 and choice != 2:
-            choice = int(input("Please enter to 1 hit or 2 stay, then press enter."))
+            try:
+                choice = int(input("Please enter to 1 hit or 2 stay, then press enter."))
+            except:
+                choice = 0
+                continue
+
         return choice
 
 

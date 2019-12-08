@@ -123,6 +123,9 @@ class Game:
 
         x = pd.read_csv('newentry.csv')
         x_new = x.loc[:, self.feature_cols]
+
+        #see computer decision
+        print(self.logreg.predict(x_new))
         return(self.logreg.predict(x_new))
 
     def computerAction(self):
@@ -159,6 +162,7 @@ class Game:
             playerLoss = True
 
         DataAccess.add_score("jeremy", self.playerWin, playerLoss, self.draw)
+
         print("Player Score: ", self.playerHand.countScore())
         print("Player Hand: ", self.playerHand.printHand())
         print("Computer Score: ", self.compHand.countScore())

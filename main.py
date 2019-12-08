@@ -1,11 +1,12 @@
 from six import unichr
-
+import csv
 import Deck
 import Hand
 import DataAccess
 import pandas as pd
+import numpy as np
 import sklearn
-#from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression
 from Card import Card
 
 def clearScreen():
@@ -20,6 +21,12 @@ class Game:
     compMsg = ""
     playerActionArr = []
     compActionArr = []
+    logreg = LogisticRegression(solver='lbfgs')
+    dataset = pd.read_csv('data.csv')
+    feature_cols = ['player_score', 'comp_score', 'computerHasAce']
+    X = dataset.loc[:, feature_cols]
+    Y = dataset.decision.astype(int)
+    logreg.fit(X, Y)
 
     def __init__(self):
         self.Deck = Deck.Deck()
@@ -70,7 +77,8 @@ class Game:
                     ['data.csv', 'dataset', self.playerHand.countScore(), self.compHand.countScore(),
                      self.playerHand.hasAce, 0])
             #computer decision
-            compChoice = self.computerAction()
+            #compChoice = self.computerAction()
+            compChoice = self.compAIDecision()
             if compChoice == 1:
                 self.compActionArr.append(['data.csv', 'dataset', self.playerHand.countScore(), self.compHand.countScore
                 (), self.compHand.hasAce, compChoice])
@@ -102,6 +110,21 @@ class Game:
                 DataAccess.append_data(x)
         print(self.determineWinner())
 
+    def compAIDecision(self):
+        fieldnames = ['player_score', 'comp_score', 'computerHasAce']
+        with open('newentry.csv', "w", newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerow({
+                "player_score": int(self.playerHand.countScore()),
+                "comp_score": int(self.compHand.countScore()),
+                "computerHasAce": int(self.compHand.hasAce)
+            })
+
+        x = pd.read_csv('newentry.csv')
+        x_new = x.loc[:, self.feature_cols]
+        return(self.logreg.predict(x_new))
+
     def computerAction(self):
         #to be replaced with AI decision tree
         if 21 >= self.playerHand.countScore() > self.compHand.countScore():
@@ -130,6 +153,12 @@ class Game:
 
     def determineWinner(self):
         clearScreen()
+        if self.playerWin or self.draw:
+            playerLoss = False
+        else:
+            playerLoss = True
+
+        DataAccess.add_score("jeremy", self.playerWin, playerLoss, self.draw)
         print("Player Score: ", self.playerHand.countScore())
         print("Player Hand: ", self.playerHand.printHand())
         print("Computer Score: ", self.compHand.countScore())
@@ -167,4 +196,5 @@ x = Game()
 x.playGame()
 
 #y = pd.read_csv('data.csv').head(3)
-#print(y)
+#print(y.computerHasAce)
+#print(y['decision'].sum())

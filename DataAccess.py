@@ -8,6 +8,22 @@ def overwrite_data(filepath):
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
+def create_score():
+    fieldnames = ['name', 'win', 'loss', 'draw']
+    with open('scoreboard.csv', "w+", newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+
+def add_score(name, win, loss, draw):
+    fieldnames = ['name', 'win', 'loss', 'draw']
+    with open('scoreboard.csv', "a", newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writerow({
+            "name": name,
+            "win": int(win),
+            "loss": int(loss),
+            "draw": int(draw)
+        })
 
 def read_data(filepath):
     with open(filepath, "r", newline='') as csvfile:

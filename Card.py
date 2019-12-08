@@ -18,12 +18,12 @@ class Card:
         else:
             s = s + str(self.number)
         if self.suit == 0:
-            s = s + " Clubs"
+            s = s + " \u2663"
         elif self.suit == 1:
-            s = s + " Diamonds"
+            s = s + " \u2666"
         elif self.suit == 2:
-            s = s + " Hearts"
+            s = s + " \u2665"
         else:
-            s = s + " Spades"
+            s = s + " \u2660"
 
         return s

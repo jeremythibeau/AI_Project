@@ -1,9 +1,16 @@
+from six import unichr
+
 import Deck
 import Hand
+import DataAccess
+import pandas as pd
+import sklearn
+#from sklearn.linear_model import LogisticRegression
 from Card import Card
 
 def clearScreen():
     print("\n" * 100)
+
 
 class Game:
 
@@ -11,6 +18,8 @@ class Game:
     winner = False
     draw = False
     compMsg = ""
+    playerActionArr = []
+    compActionArr = []
 
     def __init__(self):
         self.Deck = Deck.Deck()
@@ -44,33 +53,53 @@ class Game:
 
             #player decision
             playerchoice = self.turnScreen()
+
+
+            #used to make player play automatically
+            #playerchoice = self.playerAutoAction()
             if playerchoice == 1:
+                self.playerActionArr.append(['data.csv', 'dataset', self.playerHand.countScore(),
+                                             self.compHand.countScore(), self.playerHand.hasAce, playerchoice])
                 self.playerHand.addCard(self.Deck.drawCard())
                 #check if player loses
                 if self.playerHand.checkBusted():
                     self.winner = True
                     break
-
+            else:
+                self.playerActionArr.append(
+                    ['data.csv', 'dataset', self.playerHand.countScore(), self.compHand.countScore(),
+                     self.playerHand.hasAce, 0])
             #computer decision
             compChoice = self.computerAction()
             if compChoice == 1:
+                self.compActionArr.append(['data.csv', 'dataset', self.playerHand.countScore(), self.compHand.countScore
+                (), self.compHand.hasAce, compChoice])
                 self.compMsg = "Computer hit."
-                self.playerHand.addCard(self.Deck.drawCard())
+                self.compHand.addCard(self.Deck.drawCard())
                 #check if computer loses
-                if self.playerHand.checkBusted():
+                if self.compHand.checkBusted():
                     self.winner = True
                     self.playerWin = True
                     break
             else:
+                self.compActionArr.append(
+                    ['data.csv', 'dataset', self.playerHand.countScore(),
+                     self.compHand.countScore(), self.compHand.hasAce, 0])
                 self.compMsg = "Computer stayed."
 
             #if both computer and player stayed game ends
-            if compChoice == 2 and playerchoice == 2:
+            if compChoice == 0 and playerchoice == 2:
                 if self.playerHand.countScore() == self.compHand.countScore():
                     self.draw = True
                 break
 
         #determine results
+        if(self.playerWin):
+            for x in self.playerActionArr:
+                DataAccess.append_data(x)
+        elif(self.playerWin == False and self.draw == False):
+            for x in self.compActionArr:
+                DataAccess.append_data(x)
         print(self.determineWinner())
 
     def computerAction(self):
@@ -79,9 +108,25 @@ class Game:
             return 1
 
         #blackjack "rulebook" says you should hit on less than 16 due to odds of hand improvement without busting out
-        elif self.playerHand.countScore() == self.compHand.countScore() and self.compHand.countScore() <= 15:
+        elif (self.compHand.countScore() <= 15):
             return 1
-        return 2
+
+        elif (self.compHand.countScore() == 16 and self.compHand.hasAce == True):
+            return 1
+        return 0
+
+    def playerAutoAction(self):
+        #was used to auto generate player result
+        if 21 >= self.compHand.countScore() > self.playerHand.countScore():
+            return 1
+
+        #blackjack "rulebook" says you should hit on less than 16 due to odds of hand improvement without busting out
+        elif (self.playerHand.countScore() <= 15):
+            return 1
+
+        elif (self.playerHand.countScore() == 16 and self.playerHand.hasAce == True):
+            return 1
+        return 0
 
     def determineWinner(self):
         clearScreen()
@@ -90,7 +135,7 @@ class Game:
         print("Computer Score: ", self.compHand.countScore())
         print("Computer Hand: ", self.compHand.printHand())
         if self.playerWin is True:
-            return "Congratulations you won!"
+            return "Congratulations, you won!"
         elif self.playerWin is False and self.draw is True:
             return "Well, it's a draw! Shall we go again to settle the tie?"
         return "Better luck next time, I won."
@@ -118,6 +163,8 @@ class Game:
 
         return choice
 
-
 x = Game()
 x.playGame()
+
+#y = pd.read_csv('data.csv').head(3)
+#print(y)

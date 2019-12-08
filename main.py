@@ -226,7 +226,7 @@ class Game:
         if self.playerWin is True:
             return "Congratulations, you won!"
         elif self.playerWin is False and self.draw is True:
-            return "Well, it's a draw! Shall we go again to settle the tie?"
+            return "Well, it's a draw!"
         return "Better luck next time, I won."
 
     def turnScreen(self):

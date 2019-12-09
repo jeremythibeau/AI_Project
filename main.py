@@ -1,13 +1,9 @@
-from six import unichr
 import csv
 import Deck
 import Hand
 import DataAccess
 import pandas as pd
-import numpy as np
-import sklearn
 from sklearn.linear_model import LogisticRegression
-from Card import Card
 
 def clearScreen():
     print("\n" * 100)
@@ -153,6 +149,11 @@ class Game:
             if compChoice == 0 and playerchoice == 2:
                 if self.playerHand.countScore() == self.compHand.countScore():
                     self.draw = True
+                elif self.playerHand.countScore() > self.compHand.countScore():
+                    self.winner = True
+                    self.playerWin = True
+                elif self.compHand.countScore() > self.playerHand.countScore():
+                    self.winner = True
                 break
 
         #determine results, and based on who wins, adds the winner's actions to the dataset for learning
@@ -258,6 +259,15 @@ class Game:
 ####   MAIN #####
 
 pname = input("Please enter your name.")
+
+#prevents issues with uploading data to csv file
+while(pname.__contains__(',')):
+    pname = input("Please enter your name without commas.")
+
+
+#prevent program display error for first entry into the game.
+DataAccess.add_score(pname, 0, 0, 0)
+
 MainMenu(pname)
 print("Thank you for playing!")
 

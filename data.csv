@@ -8325,3 +8325,6 @@ id,name,player_score,comp_score,computerHasAce,decision
 8324,amie,19,10,0,0
 8325,amie,19,20,0,0
 8326,amie,17,7,0,1
+8327,bob,12,13,0,0
+8328,bob,12,18,0,0
+8329,bob,12,20,0,0

@@ -8,6 +8,22 @@ from sklearn.linear_model import LogisticRegression
 def clearScreen():
     print("\n" * 100)
 
+
+def train():
+    hands = pd.read_csv('data.csv')
+    train = hands.sample(frac=0.8, random_state=99)
+    feature_cols = ['player_score', 'comp_score', 'computerHasAce']
+    test = hands.loc[~hands.index.isin(train.index)]
+    test2 = hands.loc[~hands.index.isin(train.index), feature_cols]
+    logreg = LogisticRegression(solver="lbfgs")
+    X = train.loc[:, feature_cols]
+    Y = train.loc[:, 'decision']
+    logreg.fit(X, Y)
+    x_new = logreg.predict(test2)
+    from sklearn.metrics import accuracy_score
+    print(accuracy_score(test.decision, x_new))
+
+
 def MainMenu(name):
     choice = 0
     #loop through main menu util user quits
@@ -258,6 +274,12 @@ class Game:
 
 
 ####   MAIN #####
+
+
+#this method calculates accuracy of LogReg algorithm.
+#train()
+
+
 
 pname = input("Please enter your name.")
 

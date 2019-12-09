@@ -192,6 +192,7 @@ class Game:
         elif (self.compHand.countScore() <= 15):
             return 1
 
+        #"rulebook" also says you should hit on 16 when you have an ace due to odds of hand improvement without busting out
         elif (self.compHand.countScore() == 16 and self.compHand.hasAce == True):
             return 1
         return 0
